@@ -35,11 +35,11 @@ new service --name="chamber" --path="/absolute/local/chamber" --branch="spd-inte
 		},
 	}
 
-	newCmd.Flags().StringVarP(&resourceName, "name", "n", "", "resource name")
-	newCmd.Flags().BoolVarP(&setActive, "active", "a", false, "project only - sets the active project to this")
-	newCmd.Flags().StringVarP(&projectName, "project", "P", "", "service only - the project to assign this new service to")
-	newCmd.Flags().StringVarP(&servicePath, "path", "p", "", "service only - the absolute path to the local git repository")
-	newCmd.Flags().StringVarP(&serviceBranch, "branch", "b", "", "service only - the git branch to use")
+	newCmd.Flags().StringVar(&resourceName, "name", "", "resource name")
+	newCmd.Flags().BoolVar(&setActive, "active", false, "project only - sets the active project to this")
+	newCmd.Flags().StringVar(&projectName, "project", "", "service only - the project to assign this new service to")
+	newCmd.Flags().StringVar(&servicePath, "path", "", "service only - the absolute path to the local git repository")
+	newCmd.Flags().StringVar(&serviceBranch, "branch", "", "service only - the git branch to use")
 
 	return newCmd
 }

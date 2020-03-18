@@ -23,7 +23,7 @@ func newSyncCmd() *cobra.Command {
 		},
 	}
 
-	syncCmd.Flags().BoolVarP(&forceSync, "force", "f", false, "force sync dirty branches")
+	syncCmd.Flags().BoolVar(&forceSync, "force", false, "force sync dirty branches")
 
 	return syncCmd
 }

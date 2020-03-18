@@ -21,8 +21,8 @@ remove service --name=chamber --project=spd-integration`,
 		},
 	}
 
-	removeCmd.Flags().StringVarP(&resourceName, "name", "n", "", "resource name")
-	removeCmd.Flags().StringVarP(&projectName, "project", "P", "", "project name")
+	removeCmd.Flags().StringVar(&resourceName, "name", "", "resource name")
+	removeCmd.Flags().StringVar(&projectName, "project", "", "project name")
 
 	return removeCmd
 }

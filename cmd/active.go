@@ -38,8 +38,8 @@ func newActiveCmd() *cobra.Command {
 		},
 	}
 
-	activeCmd.Flags().StringVarP(&projectName, "project", "P", "", "project name")
-	activeCmd.Flags().BoolVarP(&autoSync, "sync", "s", false, "sync project after activating; only works if --project option provided")
+	activeCmd.Flags().StringVar(&projectName, "project", "", "project name")
+	activeCmd.Flags().BoolVar(&autoSync, "sync", false, "sync project after activating; only works if --project option provided")
 
 	return activeCmd
 }
