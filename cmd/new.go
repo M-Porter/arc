@@ -6,8 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newNewCommand() *cobra.Command {
-	options := resource.CreateResourceOptions{}
+func newNewCmd() *cobra.Command {
+	var resourceName string
+	var projectName string
+	var servicePath string
+	var serviceBranch string
 
 	newCmd := &cobra.Command{
 		Use:   "new (project|service) --name=NAME",
@@ -16,29 +19,25 @@ func newNewCommand() *cobra.Command {
 new service --name="chamber" --path="/absolute/local/chamber" --branch="spd-integration" --project="spd-integration"`,
 		ValidArgs: []string{"project", "service"},
 		Args:      cobra.ExactValidArgs(1),
-		Run:       newCommandHandler(&options),
+		Run: func(cmd *cobra.Command, args []string) {
+			resourceType := args[0]
+
+			util.EnforceFlag(resourceName, "", "--name flag required")
+
+			switch resourceType {
+			case "project":
+				resource.CreateProject(resourceName)
+			case "service":
+				util.EnforceFlag(servicePath, "", "--path flag required")
+				resource.CreateService(resourceName, projectName, servicePath, serviceBranch)
+			}
+		},
 	}
 
-	newCmd.Flags().StringVarP(&options.ResourceName, "name", "n", "", "resource name")
-	newCmd.Flags().StringVarP(&options.ProjectName, "project", "P", "", "service only - the project to assign this new service to")
-	newCmd.Flags().StringVarP(&options.ServicePath, "path", "p", "", "service only - the absolute path to the local git repository")
-	newCmd.Flags().StringVarP(&options.ServiceBranch, "branch", "b", "", "service only - the git branch to use")
+	newCmd.Flags().StringVarP(&resourceName, "name", "n", "", "resource name")
+	newCmd.Flags().StringVarP(&projectName, "project", "P", "", "service only - the project to assign this new service to")
+	newCmd.Flags().StringVarP(&servicePath, "path", "p", "", "service only - the absolute path to the local git repository")
+	newCmd.Flags().StringVarP(&serviceBranch, "branch", "b", "", "service only - the git branch to use")
 
 	return newCmd
-}
-
-func newCommandHandler(options *resource.CreateResourceOptions) func(cmd *cobra.Command, args []string) {
-	return func(cmd *cobra.Command, args []string) {
-		resourceType := args[0]
-
-		util.EnforceFlag(options.ResourceName, "", "--name flag required")
-
-		switch resourceType {
-		case "project":
-			resource.CreateProject(options)
-		case "service":
-			util.EnforceFlag(options.ServicePath, "", "--path flag required")
-			resource.CreateService(options)
-		}
-	}
 }

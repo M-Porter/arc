@@ -27,7 +27,7 @@ func Execute() {
 	rootCmd := newRootCmd()
 
 	rootCmd.AddCommand(
-		newNewCommand(),
+		newNewCmd(),
 		newRemoveCmd(),
 		newActiveCmd(),
 		newListCmd(),
