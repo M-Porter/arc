@@ -24,7 +24,7 @@ func Project(project *config.Project, force bool) error {
 	var numErrors int8 = 0
 
 	for _, svc := range project.Services {
-		util.Printf("syncing service %s => ", svc.Name)
+		util.Printf("syncing service %s... ", svc.Name)
 		err := Service(&svc, force)
 		if err != nil {
 			numErrors += 1
