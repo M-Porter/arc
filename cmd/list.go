@@ -12,7 +12,7 @@ func newListCmd() *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "Lists all projects and their services",
 		Run: func(cmd *cobra.Command, args []string) {
-			projects := config.GetArcConfig().Projects
+			projects := config.LoadArcConfig().Projects
 
 			if len(projects) == 0 {
 				fmt.Println("no defined projects")

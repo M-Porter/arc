@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"github.com/m-porter/arc/lib/utils"
+	"github.com/m-porter/arc/lib/util"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -13,7 +13,7 @@ import (
 func ArcDirectory() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		utils.Fatalf("could not get user home dir: %v", err)
+		util.Fatalf("could not get user home dir: %v", err)
 	}
 	return path.Join(homeDir, arcDirectory)
 }
@@ -27,7 +27,7 @@ func ArcConfigPath() string {
 func Println(cfg interface{}) {
 	yamlBytes, err := yaml.Marshal(&cfg)
 	if err != nil {
-		utils.Fatalf("error marshalling config: %v", err)
+		util.Fatalf("error marshalling config: %v", err)
 	}
 	fmt.Printf("%s", string(yamlBytes))
 }
@@ -35,28 +35,28 @@ func Println(cfg interface{}) {
 // EnsureArcConfig verifies that the arc config exists. If it does not it is created.
 func EnsureArcConfig() {
 	arcPath := ArcDirectory()
-	arcPathExists, err := utils.PathExists(arcPath)
+	arcPathExists, err := util.PathExists(arcPath)
 	if !arcPathExists {
 		if err := os.MkdirAll(arcPath, os.ModePerm); err != nil {
-			utils.Fatalf("error creating arc directory: %v", err)
+			util.Fatalf("error creating arc directory: %v", err)
 		}
 	} else if err != nil {
-		utils.Fatalf("error checking if directory exists: %v", err)
+		util.Fatalf("error checking if directory exists: %v", err)
 	}
 
 	arcConfigPath := ArcConfigPath()
-	arcConfigPathExists, err := utils.PathExists(arcConfigPath)
+	arcConfigPathExists, err := util.PathExists(arcConfigPath)
 	if !arcConfigPathExists {
 		f, err := os.Create(arcConfigPath)
 		if err != nil {
-			utils.Fatalf("error created arc config: %v", err)
+			util.Fatalf("error created arc config: %v", err)
 		}
 		err = f.Close()
 		if err != nil {
-			utils.Fatalf("error closing arc config: %v", err)
+			util.Fatalf("error closing arc config: %v", err)
 		}
 	} else if err != nil {
-		utils.Fatalf("error checking if config exists: %v", err)
+		util.Fatalf("error checking if config exists: %v", err)
 	}
 }
 
@@ -67,31 +67,31 @@ func WriteArcConfig(arcConfig *ArcConfig) {
 
 	file, err := os.OpenFile(arcConfigPath, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		utils.Fatalf("error opening arc config: %v", err)
+		util.Fatalf("error opening arc config: %v", err)
 	}
 
 	yamlConf, err := yaml.Marshal(arcConfig)
 	if err != nil {
-		utils.Fatalf("error marshalling arc config: %v", err)
+		util.Fatalf("error marshalling arc config: %v", err)
 	}
 
 	_, err = file.Write(yamlConf)
 	if err != nil {
-		utils.Fatalf("error writing arc config: %v", err)
+		util.Fatalf("error writing arc config: %v", err)
 	}
 }
 
-func GetArcConfig() *ArcConfig {
+func LoadArcConfig() *ArcConfig {
 	arcConfigPath := ArcConfigPath()
 
 	f, err := os.OpenFile(arcConfigPath, os.O_RDWR, 0644)
 	if err != nil {
-		utils.Fatalf("error opening arc config: %v", err)
+		util.Fatalf("error opening arc config: %v", err)
 	}
 
 	fileInfo, err := f.Stat()
 	if err != nil {
-		utils.Fatalf("error opening arc config: %v", err)
+		util.Fatalf("error opening arc config: %v", err)
 	}
 
 	arcConfig := &ArcConfig{}
@@ -102,12 +102,12 @@ func GetArcConfig() *ArcConfig {
 
 	fBytes, err := ioutil.ReadFile(arcConfigPath)
 	if err != nil {
-		utils.Fatalf("error reading arc config: %v", err)
+		util.Fatalf("error reading arc config: %v", err)
 	}
 
 	err = yaml.Unmarshal(fBytes, arcConfig)
 	if err != nil {
-		utils.Fatalf("error unmarshalling arc config: %v", err)
+		util.Fatalf("error unmarshalling arc config: %v", err)
 	}
 
 	return arcConfig

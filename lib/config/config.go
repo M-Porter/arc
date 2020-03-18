@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/m-porter/arc/lib/utils"
+	"fmt"
 )
 
 var arcDirectory = ".arc"
@@ -23,22 +23,20 @@ type Service struct {
 	Branch string `yaml:"branch"`
 }
 
-func (cfg *ArcConfig) ProjectByName(name string) *Project {
+func (cfg *ArcConfig) ProjectByName(name string) (*Project, error) {
 	for _, project := range cfg.Projects {
 		if project.Name == name {
-			return &project
+			return &project, nil
 		}
 	}
-	utils.Fatalf("error: project %s not defined", name)
-	return nil
+	return nil, fmt.Errorf("error: project %s not defined", name)
 }
 
-func (svc *Project) ServiceByName(name string) *Service {
+func (svc *Project) ServiceByName(name string) (*Service, error) {
 	for _, service := range svc.Services {
 		if service.Name == name {
-			return &service
+			return &service, nil
 		}
 	}
-	utils.Fatalf("error: service %s not defined", name)
-	return nil
+	return nil, fmt.Errorf("error: service %s not defined", name)
 }

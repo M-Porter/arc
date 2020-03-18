@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/m-porter/arc/lib/config"
-	"github.com/m-porter/arc/lib/utils"
+	"github.com/m-porter/arc/lib/util"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +36,6 @@ func Execute() {
 
 	err := rootCmd.Execute()
 	if err != nil {
-		utils.Fatalf("error starting arc: %v", err)
+		util.Fatalf("error starting arc: %v", err)
 	}
 }
