@@ -3,13 +3,14 @@ package cmd
 import (
 	"fmt"
 	"github.com/m-porter/arc/lib/config"
+	"github.com/m-porter/arc/lib/sync"
 	"github.com/m-porter/arc/lib/util"
 	"github.com/spf13/cobra"
 )
 
 func newActiveCmd() *cobra.Command {
 	var projectName string
-	var sync bool
+	var autoSync bool
 
 	activeCmd := &cobra.Command{
 		Use:   "active --project=PROJECT",
@@ -26,8 +27,11 @@ func newActiveCmd() *cobra.Command {
 			cfg.CurrentProject = projectName
 			config.WriteArcConfig(cfg)
 
-			if sync {
-				//
+			if autoSync {
+				err := sync.ProjectByName(cfg.CurrentProject, false)
+				if err != nil {
+					util.Fatalf("%v", err)
+				}
 			} else {
 				util.Printlnf(`run "arc sync" to update all services`)
 			}
@@ -35,7 +39,7 @@ func newActiveCmd() *cobra.Command {
 	}
 
 	activeCmd.Flags().StringVarP(&projectName, "project", "P", "", "project name")
-	activeCmd.Flags().BoolVarP(&sync, "sync", "s", false, "sync project after activating; only works if --project option provided")
+	activeCmd.Flags().BoolVarP(&autoSync, "sync", "s", false, "sync project after activating; only works if --project option provided")
 
 	return activeCmd
 }
