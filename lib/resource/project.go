@@ -7,12 +7,12 @@ import (
 
 func CreateProject(options *CreateResourceOptions) {
 	project := config.Project{
-		Name: options.ProjectName,
+		Name: options.ResourceName,
 	}
 
 	cfg := config.LoadArcConfig()
-	if _, err := cfg.ProjectByName(project.Name); err != nil {
-		util.Fatalf("error: cannot create duplicate project %s", project.Name)
+	if p, _ := cfg.ProjectByName(project.Name); p != nil {
+		util.Fatalf("error: cannot create duplicate project %v: %v", project.Name)
 	}
 
 	cfg.Projects = append(cfg.Projects, project)
