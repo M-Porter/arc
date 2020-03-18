@@ -8,8 +8,8 @@ var arcDirectory = ".arc"
 var arcConfig = "arc.yaml"
 
 type ArcConfig struct {
-	CurrentProject string    `yaml:"currentProject"`
-	Projects       []Project `yaml:"projects"`
+	ActiveProject string    `yaml:"activeProject"`
+	Projects      []Project `yaml:"projects"`
 }
 
 type Project struct {

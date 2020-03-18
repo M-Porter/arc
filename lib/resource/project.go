@@ -19,14 +19,19 @@ func CreateProject(resourceName string, setActive bool) {
 	cfg.Projects = append(cfg.Projects, project)
 
 	if setActive {
-		cfg.CurrentProject = project.Name
+		cfg.ActiveProject = project.Name
 	}
 
 	config.WriteArcConfig(cfg)
 }
 
 func ActiveProject() *config.Project {
-	return &config.Project{}
+	cfg := config.LoadArcConfig()
+	project, err := cfg.ProjectByName(cfg.ActiveProject)
+	if err != nil {
+		util.Fatalf("error: no active project\nset one with \"arc active\" command")
+	}
+	return project
 }
 
 func RemoveProject(resourceName string) {
@@ -35,9 +40,8 @@ func RemoveProject(resourceName string) {
 	for idx, project := range cfg.Projects {
 		if project.Name == resourceName {
 			cfg.Projects = append(cfg.Projects[:idx], cfg.Projects[idx+1:]...)
-
-			if cfg.CurrentProject == resourceName {
-				cfg.CurrentProject = ""
+			if cfg.ActiveProject == resourceName {
+				cfg.ActiveProject = ""
 			}
 		}
 	}

@@ -16,7 +16,7 @@ func newSyncCmd() *cobra.Command {
 		Long:  "Syncs all defined services for the active project. By default, dirty branches and the current working directory service will not be sync'd.",
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg := config.LoadArcConfig()
-			err := sync.ProjectByName(cfg.CurrentProject, forceSync)
+			err := sync.ProjectByName(cfg.ActiveProject, forceSync)
 			if err != nil {
 				util.Fatalf("%v", err)
 			}

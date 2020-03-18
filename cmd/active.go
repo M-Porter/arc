@@ -19,16 +19,16 @@ func newActiveCmd() *cobra.Command {
 			cfg := config.LoadArcConfig()
 
 			if projectName == "" {
-				fmt.Println(cfg.CurrentProject)
+				fmt.Println(cfg.ActiveProject)
 				return
 			}
 
 			util.Printlnf("activating %v", projectName)
-			cfg.CurrentProject = projectName
+			cfg.ActiveProject = projectName
 			config.WriteArcConfig(cfg)
 
 			if autoSync {
-				err := sync.ProjectByName(cfg.CurrentProject, false)
+				err := sync.ProjectByName(cfg.ActiveProject, false)
 				if err != nil {
 					util.Fatalf("%v", err)
 				}
