@@ -1,8 +1,9 @@
 package cmd
 
 import (
+	"github.com/m-porter/arc/lib/config"
+	"github.com/m-porter/arc/lib/utils"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func newRootCmd() *cobra.Command {
@@ -21,6 +22,8 @@ Bring electricity to your development experience`,
 }
 
 func Execute() {
+	config.EnsureArcConfig()
+
 	rootCmd := newRootCmd()
 
 	rootCmd.AddCommand(
@@ -33,6 +36,6 @@ func Execute() {
 
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Exit(1)
+		utils.Fatalf("error starting arc: %v", err)
 	}
 }
