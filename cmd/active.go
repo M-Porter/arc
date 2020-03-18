@@ -9,6 +9,7 @@ import (
 
 func newActiveCmd() *cobra.Command {
 	var projectName string
+	var sync bool
 
 	activeCmd := &cobra.Command{
 		Use:   "active --project=PROJECT",
@@ -24,11 +25,17 @@ func newActiveCmd() *cobra.Command {
 			util.Printlnf("activating %v", projectName)
 			cfg.CurrentProject = projectName
 			config.WriteArcConfig(cfg)
-			util.Printlnf(`run "arc sync" to update all services`)
+
+			if sync {
+				//
+			} else {
+				util.Printlnf(`run "arc sync" to update all services`)
+			}
 		},
 	}
 
 	activeCmd.Flags().StringVarP(&projectName, "project", "P", "", "project name")
+	activeCmd.Flags().BoolVarP(&sync, "sync", "s", false, "sync project after activating; only works if --project option provided")
 
 	return activeCmd
 }
