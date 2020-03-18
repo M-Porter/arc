@@ -28,3 +28,21 @@ func CreateProject(resourceName string, setActive bool) {
 func ActiveProject() *config.Project {
 	return &config.Project{}
 }
+
+func RemoveProject(resourceName string) {
+	cfg := config.LoadArcConfig()
+
+	for idx, project := range cfg.Projects {
+		if project.Name == resourceName {
+			cfg.Projects = append(cfg.Projects[:idx], cfg.Projects[idx+1:]...)
+
+			if cfg.CurrentProject == resourceName {
+				cfg.CurrentProject = ""
+			}
+		}
+	}
+
+	config.WriteArcConfig(cfg)
+
+	util.Printlnf("project %s removed", resourceName)
+}

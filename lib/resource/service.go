@@ -36,3 +36,25 @@ func CreateService(resourceName string, projectName string, servicePath string, 
 
 	config.WriteArcConfig(cfg)
 }
+
+func RemoveService(resourceName string, projectName string) {
+	cfg := config.LoadArcConfig()
+
+	project, err := cfg.ProjectByName(projectName)
+	if err != nil {
+		util.Fatalf("error: cannot remove service from non-existent project")
+		return
+	}
+
+	for idx, svc := range project.Services {
+		if svc.Name == resourceName {
+			project.Services = append(project.Services[:idx], project.Services[idx+1:]...)
+		}
+	}
+
+	cfg.UpdateProject(*project)
+
+	config.WriteArcConfig(cfg)
+
+	util.Printlnf("service %s remove from project %s", resourceName, projectName)
+}
