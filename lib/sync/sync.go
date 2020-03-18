@@ -2,11 +2,9 @@ package sync
 
 import (
 	"fmt"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/m-porter/arc/lib/config"
+	"github.com/m-porter/arc/lib/git"
 	"github.com/m-porter/arc/lib/util"
-	"strings"
 )
 
 func ProjectByName(name string, force bool) error {
@@ -26,10 +24,13 @@ func Project(project *config.Project, force bool) error {
 	var numErrors int8 = 0
 
 	for _, svc := range project.Services {
+		util.Printf("syncing service %s => ", svc.Name)
 		err := Service(&svc, force)
 		if err != nil {
 			numErrors += 1
-			util.Printlnf("%v", err)
+			util.Printlnf("error: %v", err)
+		} else {
+			util.Printlnf("done")
 		}
 	}
 
@@ -41,49 +42,26 @@ func Project(project *config.Project, force bool) error {
 }
 
 func Service(service *config.Service, force bool) error {
-	repo, err := git.PlainOpen(service.Path)
+	currentBranch, err := git.BranchAtPath(service.Path)
 	if err != nil {
-		return fmt.Errorf("git error: %v", err)
-	}
-
-	currentBranch, err := currentBranchForService(repo)
-	if err != nil {
-		return fmt.Errorf("git error: %v", err)
+		return err
 	}
 
 	if currentBranch != service.Branch {
-		return fmt.Errorf("service branch %s not equal to current checked out branch %s... skipping", service.Branch, currentBranch)
+		return fmt.Errorf("service %s branch %s not equal to current checked out branch %s... skipping", service.Name, service.Branch, currentBranch)
 	}
 
-	util.Printlnf("syncing service %s", service.Name)
+	isDirty, err := git.RepoIsDirty(service.Path)
+	if err != nil {
+		return err
+	} else if isDirty && !force {
+		return fmt.Errorf("service %s is dirty... skipping", service.Name)
+	}
+
+	err = git.CheckoutAndPull(service.Path, service.Branch)
+	if err != nil {
+		return err
+	}
 
 	return nil
-}
-
-func currentBranchForService(repo *git.Repository) (string, error) {
-	branchRefs, err := repo.Branches()
-	if err != nil {
-		return "", err
-	}
-
-	headRef, err := repo.Head()
-	if err != nil {
-		return "", err
-	}
-
-	var currentBranchName string
-	err = branchRefs.ForEach(func(branchRef *plumbing.Reference) error {
-		if branchRef.Hash() == headRef.Hash() {
-			currentBranchName = branchRef.Name().String()
-			return nil
-		}
-		return nil
-	})
-	if err != nil {
-		return "", err
-	}
-
-	currentBranchName = strings.Replace(currentBranchName, "refs/heads/", "", 1)
-
-	return currentBranchName, nil
 }

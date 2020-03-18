@@ -12,6 +12,10 @@ func Fatalf(format string, args ...interface{}) {
 	os.Exit(1)
 }
 
+func Printf(format string, args ...interface{}) {
+	fmt.Printf(fmt.Sprintf(format, args...))
+}
+
 func Printlnf(format string, args ...interface{}) {
 	fmt.Println(fmt.Sprintf(format, args...))
 }
