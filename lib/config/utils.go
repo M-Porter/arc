@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/m-porter/arc/lib/utils"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -20,6 +21,15 @@ func ArcDirectory() string {
 // ArcConfigPath returns the arc config file path.
 func ArcConfigPath() string {
 	return path.Join(ArcDirectory(), arcConfig)
+}
+
+// Prints the config as yaml
+func Println(cfg interface{}) {
+	yamlBytes, err := yaml.Marshal(&cfg)
+	if err != nil {
+		utils.Fatalf("error marshalling config: %v", err)
+	}
+	fmt.Printf("%s", string(yamlBytes))
 }
 
 // EnsureArcConfig verifies that the arc config exists. If it does not it is created.

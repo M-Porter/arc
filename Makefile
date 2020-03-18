@@ -1,10 +1,9 @@
 setup:
 	go mod download
 	go mod vendor
-run:
-	go build -mod vendor -o target/local
+run: local
 	./target/local
-build:
-	go mod download
-	go mod vendor
+local:
+	go build -mod vendor -o target/local
+build: setup
 	go build -mod vendor -o target/arc
