@@ -32,6 +32,14 @@ func (cfg *ArcConfig) ProjectByName(name string) (*Project, error) {
 	return nil, fmt.Errorf("error: project %s not defined", name)
 }
 
+func (cfg *ArcConfig) UpdateProject(project Project) {
+	for idx, p := range cfg.Projects {
+		if p.Name == project.Name {
+			cfg.Projects[idx] = project
+		}
+	}
+}
+
 func (svc *Project) ServiceByName(name string) (*Service, error) {
 	for _, service := range svc.Services {
 		if service.Name == name {

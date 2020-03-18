@@ -28,7 +28,11 @@ func CreateService(resourceName string, projectName string, servicePath string, 
 		return
 	}
 
+	util.Printlnf("creating service %v for project %v", service.Name, projectName)
+
 	project.Services = append(project.Services, service)
+
+	cfg.UpdateProject(*project)
 
 	config.WriteArcConfig(cfg)
 }

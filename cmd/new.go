@@ -11,6 +11,7 @@ func newNewCmd() *cobra.Command {
 	var projectName string
 	var servicePath string
 	var serviceBranch string
+	var setActive bool
 
 	newCmd := &cobra.Command{
 		Use:   "new (project|service) --name=NAME",
@@ -26,7 +27,7 @@ new service --name="chamber" --path="/absolute/local/chamber" --branch="spd-inte
 
 			switch resourceType {
 			case "project":
-				resource.CreateProject(resourceName)
+				resource.CreateProject(resourceName, setActive)
 			case "service":
 				util.EnforceFlag(servicePath, "", "--path flag required")
 				resource.CreateService(resourceName, projectName, servicePath, serviceBranch)
@@ -35,6 +36,7 @@ new service --name="chamber" --path="/absolute/local/chamber" --branch="spd-inte
 	}
 
 	newCmd.Flags().StringVarP(&resourceName, "name", "n", "", "resource name")
+	newCmd.Flags().BoolVarP(&setActive, "active", "a", false, "project only - sets the active project to this")
 	newCmd.Flags().StringVarP(&projectName, "project", "P", "", "service only - the project to assign this new service to")
 	newCmd.Flags().StringVarP(&servicePath, "path", "p", "", "service only - the absolute path to the local git repository")
 	newCmd.Flags().StringVarP(&serviceBranch, "branch", "b", "", "service only - the git branch to use")

@@ -5,7 +5,7 @@ import (
 	"github.com/m-porter/arc/lib/util"
 )
 
-func CreateProject(resourceName string) {
+func CreateProject(resourceName string, setActive bool) {
 	project := config.Project{
 		Name: resourceName,
 	}
@@ -17,6 +17,10 @@ func CreateProject(resourceName string) {
 	}
 
 	cfg.Projects = append(cfg.Projects, project)
+
+	if setActive {
+		cfg.CurrentProject = project.Name
+	}
 
 	config.WriteArcConfig(cfg)
 }
