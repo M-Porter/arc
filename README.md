@@ -13,4 +13,13 @@ Bring electricity to your development experience
 
 ## Installation
 
-### [Download pre-build binary (MacOS, Linux)](https://github.com/M-Porter/arc/releases/latest)
+### Via `go get`
+
+```
+go get -u github.com/M-Porter/arc
+```
+
+### Via pre-built Binary
+
+- [MacOS](https://github.com/M-Porter/arc/releases/latest)
+- [Linux](https://github.com/M-Porter/arc/releases/latest)
